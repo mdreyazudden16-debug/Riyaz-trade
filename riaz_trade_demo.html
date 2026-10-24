@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Riaz Trade — Demo Trading</title>
+<style>
+:root{--bg:#07111f;--panel:#0d1b2d;--panel2:#102239;--line:#203750;--text:#edf5ff;--muted:#91a8c2;--green:#16c784;--red:#ea4d5b;--blue:#4da3ff}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#102a46 0,#07111f 55%);color:var(--text);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+header{height:70px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;border-bottom:1px solid var(--line);background:#07111fe8;position:sticky;top:0;z-index:2}
+.brand{display:flex;gap:11px;align-items:center;font-weight:800;font-size:20px;letter-spacing:.2px}.logo{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#36d6a0,#2480ff);display:grid;place-items:center;color:#06111d;font-weight:900}
+.badge{border:1px solid #876f31;color:#ffd875;background:#3c3015;padding:5px 10px;border-radius:20px;font-size:12px;font-weight:700}
+main{max-width:1200px;margin:24px auto;padding:0 16px}.top{display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:18px}.asset{display:flex;gap:12px;align-items:center}.coin{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:#172e48;font-weight:800;color:#7fc5ff}.asset h1{font-size:19px;margin:0}.muted{color:var(--muted);font-size:13px}.pricebox{margin-left:auto;text-align:right}.price{font-size:24px;font-weight:800}.positive{color:var(--green)}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px}.card{background:linear-gradient(180deg,#102239,#0b192a);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:0 10px 30px #0002}.cardhead{display:flex;justify-content:space-between;align-items:center;padding:15px 17px;border-bottom:1px solid var(--line);font-weight:700}.controls{display:flex;gap:6px}.smallbtn{background:#142b43;color:#b8cce2;border:1px solid #29445f;border-radius:8px;padding:6px 10px;cursor:pointer}.smallbtn.active{background:#174b78;color:white;border-color:#338ed5}
+.chartwrap{height:390px;padding:10px;position:relative}.chartwrap canvas{width:100%;height:100%;display:block}.chartnote{position:absolute;bottom:13px;left:18px;color:#7590ab;font-size:11px;background:#0b192acc;padding:3px 7px;border-radius:5px}
+.tradebody{padding:16px}.fieldlabel{font-size:12px;color:var(--muted);display:block;margin-bottom:7px}.amountrow{display:flex;align-items:center;background:#081525;border:1px solid #29435c;border-radius:10px;padding:5px}.amountrow button{background:#17324c;color:white;border:0;border-radius:7px;width:31px;height:32px;font-size:18px;cursor:pointer}.amountrow input{width:100%;background:transparent;border:0;outline:0;color:white;text-align:center;font-size:17px;font-weight:700;min-width:0}.quick{display:flex;gap:6px;margin:9px 0 17px}.quick button{flex:1;background:#132941;border:1px solid #29435c;color:#a9bfd7;border-radius:7px;padding:6px 0;cursor:pointer}.row{display:flex;justify-content:space-between;align-items:center;margin:13px 0;color:#afc2d8;font-size:13px}.row strong{color:#fff}.payout{color:var(--green)!important}.tradebuttons{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:16px}.tradebtn{border:0;border-radius:11px;padding:14px 6px;color:white;font-weight:800;font-size:16px;cursor:pointer;box-shadow:inset 0 -3px #0002;transition:transform .12s}.tradebtn:active{transform:scale(.98)}.up{background:linear-gradient(135deg,#12bb82,#079d70)}.down{background:linear-gradient(135deg,#f15a67,#d83348)}.footnote{font-size:11px;color:#8299b2;margin-top:14px}
+.bottom{margin-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:16px}.stat{padding:16px}.stat .label{font-size:12px;color:var(--muted)}.stat .value{font-size:22px;font-weight:800;margin-top:5px}.history{padding:0 16px 10px}.historyitem{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #1a3046;gap:10px;font-size:13px}.pill{padding:4px 8px;border-radius:6px;font-size:11px;font-weight:800}.pill.upbg{background:#0d4939;color:#5ef0bb}.pill.downbg{background:#51222c;color:#ff9ba4}.empty{color:var(--muted);text-align:center;padding:24px 0;font-size:13px}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#18344f;border:1px solid #3d6588;border-radius:10px;padding:11px 16px;box-shadow:0 8px 28px #0006;display:none;z-index:5;max-width:90%;text-align:center}
+@media(max-width:800px){.grid{grid-template-columns:1fr}.chartwrap{height:330px}.pricebox{margin-left:0;text-align:left;width:100%}.bottom{grid-template-columns:1fr}.top{align-items:flex-start}header{padding:0 14px}main{margin:16px auto}.brand{font-size:18px}}
+</style>
+</head>
+<body>
+<header><div class="brand"><div class="logo">RT</div><span>Riaz Trade</span></div><span class="badge">DEMO ACCOUNT</span></header>
+<main>
+  <section class="top">
+    <div class="asset"><div class="coin">EUR</div><div><h1>EUR/USD <span class="muted">▾</span></h1><div class="muted">Euro / US Dollar · Simulated feed</div></div></div>
+    <div class="pricebox"><div class="price" id="price">1.08425</div><div class="positive" id="change">+0.12% <span class="muted">demo movement</span></div></div>
+  </section>
+  <section class="grid">
+    <div class="card">
+      <div class="cardhead"><span>Price chart</span><div class="controls"><button class="smallbtn active" data-tf="30s">30s</button><button class="smallbtn" data-tf="1m">1m</button><button class="smallbtn" data-tf="5m">5m</button></div></div>
+      <div class="chartwrap"><canvas id="chart" aria-label="Simulated candlestick chart"></canvas><div class="chartnote">SIMULATED DATA · NOT LIVE MARKET PRICES</div></div>
+    </div>
+    <aside class="card">
+      <div class="cardhead"><span>Place demo trade</span><span class="muted">⏱ <span id="durationLabel">30 sec</span></span></div>
+      <div class="tradebody">
+        <label class="fieldlabel" for="amount">Trade amount (virtual USD)</label>
+        <div class="amountrow"><button id="minus" aria-label="Decrease amount">−</button><input id="amount" type="number" min="1" max="10000" value="10"><button id="plus" aria-label="Increase amount">+</button></div>
+        <div class="quick"><button data-amt="5">$5</button><button data-amt="10">$10</button><button data-amt="25">$25</button><button data-amt="50">$50</button></div>
+        <div class="row"><span>Demo balance</span><strong id="balance">$1,000.00</strong></div>
+        <div class="row"><span>Potential return</span><strong class="payout">+80% (illustrative)</strong></div>
+        <div class="row"><span>Potential profit</span><strong id="profit">$8.00</strong></div>
+        <div class="row"><span>Trade duration</span><strong id="durationText">30 seconds</strong></div>
+        <div class="tradebuttons"><button class="tradebtn up" id="up">↗ UP</button><button class="tradebtn down" id="down">↘ DOWN</button></div>
+        <div class="footnote">Demo only. Uses virtual credits and randomly simulated price movement. No real money, broker connection, or real trades.</div>
+      </div>
+    </aside>
+  </section>
+  <section class="bottom">
+    <div class="card"><div class="cardhead"><span>Account overview</span><span class="muted">Virtual funds</span></div><div class="stat"><div class="label">Available balance</div><div class="value" id="balanceBig">$1,000.00</div></div></div>
+    <div class="card"><div class="cardhead"><span>Trade history</span><span class="muted" id="tradeCount">0 trades</span></div><div class="history" id="history"><div class="empty">এখনও কোনো ডেমো ট্রেড করা হয়নি।</div></div></div>
+  </section>
+</main>
+<div class="toast" id="toast" role="status"></div>
+<script>
+(() => {
+ const canvas=document.getElementById('chart'), ctx=canvas.getContext('2d');
+ const priceEl=document.getElementById('price'), changeEl=document.getElementById('change');
+ const amountEl=document.getElementById('amount'), balanceEl=document.getElementById('balance'), balanceBig=document.getElementById('balanceBig');
+ let balance=1000, price=1.08425, startPrice=price, candles=[], duration=30, trades=0, tradeId=0;
+ function makeCandles(n=48){let p=price; candles=[];for(let i=0;i<n;i++){let o=p,c=o+(Math.random()-.48)*.0007,h=Math.max(o,c)+Math.random()*.00025,l=Math.min(o,c)-Math.random()*.00025;candles.push({o,c,h,l});p=c;}price=p;startPrice=candles[0].o;}
+ makeCandles();
+ function draw(){
+  const rect=canvas.getBoundingClientRect(), dpr=window.devicePixelRatio||1;
+  canvas.width=Math.max(1,Math.floor(rect.width*dpr));canvas.height=Math.max(1,Math.floor(rect.height*dpr));ctx.setTransform(dpr,0,0,dpr,0,0);
+  const w=rect.width,h=rect.height;ctx.clearRect(0,0,w,h);
+  const pad={l:8,r:58,t:14,b:22}, cw=w-pad.l-pad.r,ch=h-pad.t-pad.b;
+  let min=Math.min(...candles.map(x=>x.l)),max=Math.max(...candles.map(x=>x.h));let extra=(max-min)*.12||.0001;min-=extra;max+=extra;
+  const y=v=>pad.t+(max-v)/(max-min)*ch;
+  ctx.font='10px system-ui';ctx.strokeStyle='#203750';ctx.fillStyle='#8098b4';ctx.lineWidth=1;
+  for(let i=0;i<=5;i++){let yy=pad.t+ch*i/5;ctx.beginPath();ctx.moveTo(pad.l,yy);ctx.lineTo(w-pad.r+4,yy);ctx.stroke();ctx.fillText((max-(max-min)*i/5).toFixed(5),w-pad.r+8,yy+3);}
+  for(let i=0;i<6;i++){let xx=pad.l+cw*i/5;ctx.beginPath();ctx.moveTo(xx,pad.t);ctx.lineTo(xx,pad.t+ch);ctx.stroke();}
+  const step=cw/candles.length, body=Math.max(3,step*.56);
+  candles.forEach((c,i)=>{let x=pad.l+i*step+step/2,up=c.c>=c.o,col=up?'#16c784':'#ea4d5b';ctx.strokeStyle=col;ctx.fillStyle=col;ctx.lineWidth=1.2;ctx.beginPath();ctx.moveTo(x,y(c.h));ctx.lineTo(x,y(c.l));ctx.stroke();let top=y(Math.max(c.o,c.c)),bot=y(Math.min(c.o,c.c));ctx.fillRect(x-body/2,top,body,Math.max(1,bot-top));});
+  let py=y(price);ctx.setLineDash([4,4]);ctx.strokeStyle='#65b7ff';ctx.beginPath();ctx.moveTo(pad.l,py);ctx.lineTo(w-pad.r+3,py);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle='#1c6ca6';ctx.fillRect(w-pad.r+4,py-9,52,18);ctx.fillStyle='#fff';ctx.fillText(price.toFixed(5),w-pad.r+7,py+3);
+ }
+ function fmt(v){return '$'+v.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
+ function updateBalance(){balanceEl.textContent=fmt(balance);balanceBig.textContent=fmt(balance);}
+ function updateAmount(){let a=Math.max(1,Math.min(10000,Number(amountEl.value)||1));document.getElementById('profit').textContent=fmt(a*.8);}
+ function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';clearTimeout(toast.timer);toast.timer=setTimeout(()=>t.style.display='none',3200);}
+ function addHistory(direction,amount,result,profit){const h=document.getElementById('history');if(h.querySelector('.empty'))h.innerHTML='';const item=document.createElement('div');item.className='historyitem';const left=document.createElement('div');left.innerHTML='<span class="pill '+(direction==='UP'?'upbg':'downbg')+'">'+direction+'</span> <span class="muted"> '+new Date().toLocaleTimeString()+'</span><br><strong>'+fmt(amount)+'</strong>';const right=document.createElement('div');right.style.textAlign='right';right.innerHTML='<strong style="color:'+(result==='WIN'?'#16c784':'#ea4d5b')+'">'+result+'</strong><br><span style="color:'+(profit>=0?'#16c784':'#ea4d5b')+'">'+(profit>=0?'+':'')+fmt(profit)+'</span>';item.append(left,right);h.prepend(item);while(h.children.length>8)h.lastChild.remove();document.getElementById('tradeCount').textContent=(++trades)+' trade'+(trades===1?'':'s');}
+ function place(direction){
+   const amount=Math.floor(Number(amountEl.value));
+   if(!Number.isFinite(amount)||amount<1){toast('কমপক্ষে $1 ভার্চুয়াল ট্রেড অ্যামাউন্ট দিন।');return;}
+   if(amount>balance){toast('পর্যাপ্ত ভার্চুয়াল ব্যালেন্স নেই।');return;}
+   balance-=amount;updateBalance();const id=++tradeId,entry=price;
+   toast(direction+' ডেমো ট্রেড নেওয়া হয়েছে। ফলাফলের জন্য অপেক্ষা করুন…');
+   const wait=duration*1000;
+   setTimeout(()=>{if(id>tradeId+100000)return;const end=price;const win=direction==='UP'?end>entry:end<entry;const profit=win?amount*.8:-amount;balance+=win?amount+amount*.8:0;updateBalance();addHistory(direction,amount,win?'WIN':'LOSS',profit);toast('ডেমো ফলাফল: '+(win?'জয়!':'লস')+' · '+(profit>=0?'+':'')+fmt(profit));},wait);
+ }
+ document.getElementById('up').addEventListener('click',()=>place('UP'));
+ document.getElementById('down').addEventListener('click',()=>place('DOWN'));
+ document.getElementById('minus').onclick=()=>{amountEl.value=Math.max(1,(Number(amountEl.value)||1)-1);updateAmount();};
+ document.getElementById('plus').onclick=()=>{amountEl.value=Math.min(10000,(Number(amountEl.value)||1)+1);updateAmount();};
+ document.querySelectorAll('[data-amt]').forEach(b=>b.onclick=()=>{amountEl.value=b.dataset.amt;updateAmount();});
+ amountEl.addEventListener('input',updateAmount);
+ document.querySelectorAll('[data-tf]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-tf]').forEach(x=>x.classList.remove('active'));b.classList.add('active');duration=b.dataset.tf==='30s'?30:b.dataset.tf==='1m'?60:300;document.getElementById('durationLabel').textContent=duration+' sec';document.getElementById('durationText').textContent=duration+' seconds';});
+ function tick(){let old=price;let c=price+(Math.random()-.49)*.00022;let o=price,h=Math.max(o,c)+Math.random()*.00012,l=Math.min(o,c)-Math.random()*.00012;candles.push({o,c,h,l});if(candles.length>48)candles.shift();price=c;priceEl.textContent=price.toFixed(5);let pct=((price-startPrice)/startPrice)*100;changeEl.textContent=(pct>=0?'+':'')+pct.toFixed(3)+'% simulated movement';changeEl.style.color=pct>=0?'#16c784':'#ea4d5b';draw();}
+ window.addEventListener('resize',draw);updateAmount();updateBalance();draw();setInterval(tick,1400);
+})();
+</script>
+</body>
+</html>
